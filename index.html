@@ -176,7 +176,7 @@
                 得分: <span id="score" class="info-value">0</span>
             </div>
             <div class="info-item">
-                最高��: <span id="highScore" class="info-value">0</span>
+                最高分: <span id="highScore" class="info-value">0</span>
             </div>
             <div class="info-item">
                 生命: <span id="lives" class="info-value">100</span>
@@ -469,7 +469,7 @@
         
         // 绘制游戏元素
         function draw() {
-            // 绘制背景
+            // 绘制���景
             drawBackground();
             
             // 绘制玩家
@@ -968,9 +968,13 @@
                 ctx.font = '14px Arial';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(`BOSS ${Math.ceil(this.hp)}/${this.maxHp}`, barX, barY + barH / 2);
+                ctx.fillText(`BOSS ${Math.ceil(this.hp)}/${this.maxHp}`, barX + barW/2, barY + barH / 2);
             }
         }
+
+        // ---- 自动初始化 ----
+        // 确保在 DOM 可用时调用 init()，为按钮绑定事件等
+        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
