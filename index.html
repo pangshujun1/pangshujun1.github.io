@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的测试网页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e8;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>欢迎使用测试网页</h1>
+        <p>这是一个简单的交互式测试页面</p>
+    </div>
+    
+    <div class="content">
+        <h2>功能演示</h2>
+        <p>点击下方按钮测试交互功能：</p>
+        
+        <button onclick="showMessage()">显示欢迎信息</button>
+        <button onclick="changeColor()">切换背景颜色</button>
+        <button onclick="calculate()">简单计算器</button>
+        <button onclick="showTime()">显示当前时间</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function showMessage() {
+            document.getElementById('result').innerHTML = 
+                '<h3>🎉 欢迎使用这个测试网页！</h3><p>这是一个基本的HTML/CSS/JavaScript示例。</p>';
+            document.getElementById('result').style.display = 'block';
+        }
+
+        function changeColor() {
+            const colors = ['#ffebee', '#f3e5f5', '#e8eaf6', '#e0f2f1', '#f1f8e9'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.backgroundColor = randomColor;
+            document.getElementById('result').innerHTML = 
+                '<p>背景颜色已更改！</p>';
+            document.getElementById('result').style.display = 'block';
+        }
+
+        function calculate() {
+            const num1 = Math.floor(Math.random() * 100);
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const result = num1 + num2;
+            document.getElementById('result').innerHTML = 
+                `<p>随机计算：${num1} + ${num2} = <strong>${result}</strong></p>`;
+            document.getElementById('result').style.display = 'block';
+        }
+
+        function showTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-CN');
+            document.getElementById('result').innerHTML = 
+                `<p>当前时间：<strong>${timeString}</strong></p>`;
+            document.getElementById('result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
