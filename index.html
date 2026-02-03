@@ -213,7 +213,7 @@
                 <li>按 <strong>空格键</strong> 或 <strong>鼠标点击</strong> 发射子弹</li>
                 <li>击中敌机获得分数，被敌机撞击或被敌机子弹击中会减少生命</li>
                 <li>每得1000分提升一个等级，敌机速度和射击频率会加快</li>
-                <li>游戏中会随机掉落技能包，拾取后子弹会发生变化（持续一段时间）</li>
+                <li>游戏中会随机掉落技能包��拾取后子弹会发生变化（持续一段时间）</li>
                 <li>生命从原来的 3 改为 100，已调整为中等难度</li>
                 <li>每 5 级会出现 BOSS 关卡（击败 BOSS 才会恢复普通刷怪）</li>
             </ul>
@@ -307,10 +307,14 @@
             canvas.addEventListener('click', () => {
                 mouseClicked = true;
             });
+
+            // 调试用，确认事件绑定
+            console.log('bindEvents: events bound');
         }
         
         // 开始游戏
         function startGame() {
+            console.log('startGame() called, gameRunning=', gameRunning);
             if (!gameRunning) {
                 gameRunning = true;
                 gamePaused = false;
@@ -469,7 +473,7 @@
         
         // 绘制游戏元素
         function draw() {
-            // 绘制���景
+            // 绘制背景
             drawBackground();
             
             // 绘制玩家
@@ -493,7 +497,7 @@
         
         // 绘制星空背景
         function drawBackground() {
-            // 简单的星空效果，用固定位置避免过度闪烁
+            // 简单的星空效��，用固定位置避免过度闪烁
             ctx.fillStyle = 'white';
             for (let i = 0; i < 40; i++) {
                 const x = (i * 47 + frameCount * 0.3) % canvas.width;
@@ -969,6 +973,87 @@
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(`BOSS ${Math.ceil(this.hp)}/${this.maxHp}`, barX + barW/2, barY + barH / 2);
+            }
+        }
+
+        /* --- 新增：PowerUp 类与 applyPowerUp 函数（解决 ReferenceError） --- */
+        class PowerUp {
+            constructor() {
+                this.width = 28;
+                this.height = 28;
+                const w = (typeof canvas !== 'undefined' && canvas) ? canvas.width : 800;
+                this.x = Math.random() * Math.max(0, w - this.width);
+                this.y = -this.height;
+                const types = ['multi','spread','pierce','heal'];
+                this.type = types[Math.floor(Math.random() * types.length)];
+                this.color = '#ffd166';
+                this.speed = 1.4;
+            }
+
+            update() {
+                this.y += this.speed;
+                const h = (typeof canvas !== 'undefined' && canvas) ? canvas.height : 500;
+                return (this.y > h + 50);
+            }
+
+            draw() {
+                if (!ctx) return;
+                ctx.fillStyle = 'rgba(255,209,102,0.95)';
+                ctx.beginPath();
+                ctx.arc(this.x + this.width/2, this.y + this.height/2, this.width/2, 0, Math.PI*2);
+                ctx.fill();
+                ctx.fillStyle = '#222';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const label = this.type === 'multi' ? 'M' : this.type === 'spread' ? 'S' : this.type === 'pierce' ? 'P' : 'H';
+                ctx.fillText(label, this.x + this.width/2, this.y + this.height/2);
+            }
+        }
+
+        function applyPowerUp(type) {
+            if (!player) return;
+            if (type === 'multi') {
+                player.weapon = {
+                    name: '三连',
+                    duration: 60 * 6,
+                    cooldown: 8,
+                    bullets: 3,
+                    spread: 0.6,
+                    bulletSpeed: 12,
+                    bulletWidth: 6,
+                    piercing: false,
+                    color: '#ffd166',
+                    damage: 1
+                };
+            } else if (type === 'spread') {
+                player.weapon = {
+                    name: '散射',
+                    duration: 60 * 6,
+                    cooldown: 12,
+                    bullets: 5,
+                    spread: 1.2,
+                    bulletSpeed: 9,
+                    bulletWidth: 4,
+                    piercing: false,
+                    color: '#4ecdc4',
+                    damage: 1
+                };
+            } else if (type === 'pierce') {
+                player.weapon = {
+                    name: '穿透',
+                    duration: 60 * 5,
+                    cooldown: 6,
+                    bullets: 1,
+                    spread: 0,
+                    bulletSpeed: 13,
+                    bulletWidth: 8,
+                    piercing: true,
+                    color: '#9b59b6',
+                    damage: 2
+                };
+            } else if (type === 'heal') {
+                lives = Math.min(100, lives + 20);
             }
         }
 
