@@ -221,6 +221,7 @@
         let enemySpawnRate = 60; // 敌机生成频率（帧数）
         let frameCount = 0;
         let keys = {};
+        let mouseClicked = false; // **提升为全局变量，修复引用错误**
         
         // 从本地存储加载最高分
         function loadHighScore() {
@@ -271,8 +272,8 @@
                     this.shootCooldown--;
                 }
                 
-                // 射击（空格键或鼠标点击）
-                if ((keys[' '] || keys['Spacebar'] || mouseClicked) && this.shootCooldown === 0) {
+                // 射击（空格键或鼠标点击） —— 加上 'Space' 键的兼容支持
+                if ((keys[' '] || keys['Spacebar'] || keys['Space'] || mouseClicked) && this.shootCooldown === 0) {
                     this.shoot();
                     this.shootCooldown = 10; // 射击冷却时间
                     mouseClicked = false; // 重置鼠标点击状态
@@ -416,7 +417,6 @@
             });
             
             // 鼠标点击事件（用于射击）
-            let mouseClicked = false;
             canvas.addEventListener('mousedown', function() {
                 mouseClicked = true;
             });
@@ -514,7 +514,7 @@
             frameCount++;
             if (frameCount % enemySpawnRate === 0) {
                 enemies.push(new Enemy());
-                // 随着等级提高，敌机生成速度加快
+                // ���着等级提高，敌机生成速度加快
                 if (enemySpawnRate > 20) {
                     enemySpawnRate = Math.max(20, 60 - level * 5);
                 }
